@@ -1,7 +1,7 @@
 //********************************************
-// Student Name			:
-// Student ID			:
-// Student Email Address:
+// Student Name			: Si-Cheng KO
+// Student ID			: 114550168
+// Student Email Address: alexko02598@gmail.com
 //********************************************
 //
 // Instructor: Sai-Keung WONG

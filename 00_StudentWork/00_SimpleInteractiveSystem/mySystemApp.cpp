@@ -20,9 +20,9 @@ void MY_SYSTEM_APP::showStudentInfo( ) const
     cout << "Instructor: Prof. Sai-Keung Wong" << endl;
     cout << "----------------------------------------------------------------" << endl;
     cout << "Date: 2026/05/01" << endl;
-	cout << "Student ID:\t" << endl;
-	cout << "Student Name:\t" << endl;
-	cout << "Student Email:\t" << endl;
+	cout << "Student ID: 114550168" << endl;
+	cout << "Student Name: Si-Cheng KO" << endl;
+	cout << "Student Email: alexko02598@gmail.com" << endl;
     cout << "****************************************************************" << endl;
     cout << "****************************************************************" << endl;
 }
