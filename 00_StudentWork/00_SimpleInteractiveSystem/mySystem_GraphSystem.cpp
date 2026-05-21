@@ -1,7 +1,7 @@
 //********************************************
-// Student Name			:
-// Student ID			:
-// Student Email Address:
+// Student Name			: Si-Cheng KO
+// Student ID			: 114550168
+// Student Email Address: alexko02598@gmail.com
 //********************************************
 //
 //
@@ -147,14 +147,19 @@ void GRAPH_SYSTEM::createDefaultGraph( )
     float offset_z = 15.;
 
     int n_0 = addNode(offset_x + 0.0, 0.0, offset_z + 0.0 );
+
     cout << "n_0:"<< n_0 << endl;
+
+    int n_1 = addNode(offset_x + 5.0, 0.0, offset_z + 0.0);
+    int n_2 = addNode(offset_x + 5.0, 0.0, offset_z + 5.0);
 
     //
     // modify and add your code heres
     //
 
-    //addEdge( n_0, n_1 );
-    //addEdge( n_1, n_2 );
+    addEdge( n_0, n_1 );
+    addEdge( n_1, n_2 );
+    addEdge( n_2, n_0 );
 
 }
 
@@ -226,12 +231,17 @@ void GRAPH_SYSTEM::createNet_RadicalCircular( int n ) {
 //
 int GRAPH_SYSTEM::addNode( float x, float y, float z, float r )
 {
-    //GRAPH_NODE *g;
-    //g = getFreeNode( );
+    GRAPH_NODE *g;
+    g = getFreeNode( );
     //
     // modify and add your code heres
     //
-    return -1;
+
+    if (g == nullptr) return -1;
+
+    g->p = vector3(x, y, z);
+    g->r = r;
+    return g->id;
 }
 
 //
@@ -240,13 +250,21 @@ int GRAPH_SYSTEM::addNode( float x, float y, float z, float r )
 //
 int GRAPH_SYSTEM::addEdge( int nodeID_0, int nodeID_1 )
 {
-    //GRAPH_EDGE *e;
-    //e = getFreeEdge( );
+    GRAPH_EDGE *e;
+    e = getFreeEdge( );
     //
     // modify and add your code heres
     //
 
-    return -1;
+    if (e == nullptr) return -1;
+
+    e->nodeID[0] = nodeID_0;
+    e->nodeID[1] = nodeID_1;
+
+    mNodeArr_Pool[nodeID_0].edgeID.push_back(e->id);
+    mNodeArr_Pool[nodeID_1].edgeID.push_back(e->id);
+
+    return e->id;
 }
 
 void GRAPH_SYSTEM::askForInput( )
