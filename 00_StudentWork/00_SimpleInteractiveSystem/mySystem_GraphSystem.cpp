@@ -208,26 +208,36 @@ void GRAPH_SYSTEM::createNet_Square( int n, int num_layers )
     // modify and add your code heres
     //
 
-    vector<vector<int>> node_ids(num_layers, vector<int>(n));
-    for (int j = 0; j < num_layers; j++) {
-        for (int i = 0; i < n; i++) {
+    int total_width = (num_layers - 1) * 2 + n;
+    vector<vector<int>> node_ids(total_width, vector<int>(total_width, - 1));
+    for (int j = 0; j < total_width; j++) {
+        for (int i = 0; i < total_width; i++) {
             float x_cood = offset_x + dx * i;
             float z_cood = offset_z + dz * j;
 
-            node_ids[j][i] = addNode(x_cood, 0.0, z_cood, r);
+            if ((j > num_layers - 1 && j < total_width - num_layers) && (i > num_layers - 1 && i < total_width - num_layers)) {
+                continue;
+            }
+            else {
+                node_ids[j][i] = addNode(x_cood, 0.0, z_cood, r);
+            }
         }
     }
 
-    for (int j = 0; j < num_layers; j++) {
-        for (int i = 0; i < n; i++) {
+    for (int j = 0; j < total_width; j++) {
+        for (int i = 0; i < total_width; i++) {
+
             int cur_id = node_ids[j][i];
 
-            if (i < n - 1) {
+            if (cur_id == -1) {
+                continue;
+            }
+            if (i < total_width - 1 && node_ids[j][i + 1] != -1) {
                 int right_id = node_ids[j][i + 1];
                 addEdge(cur_id, right_id);
             }
 
-            if (j < num_layers - 1) {
+            if (j < total_width - 1 && node_ids[j + 1][i] != -1) {
                 int bottom_id = node_ids[j + 1][i];
                 addEdge(cur_id, bottom_id);
             }
