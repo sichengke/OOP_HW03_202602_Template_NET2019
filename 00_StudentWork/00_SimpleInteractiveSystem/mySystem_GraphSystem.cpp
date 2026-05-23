@@ -200,7 +200,7 @@ void GRAPH_SYSTEM::createNet_Square( int n, int num_layers )
 
     float dx = 5.0;
     float dz = 5.0;
-    float r = 5; // radius
+    float r = 1; // radius
     float d = 5; // layer distance 
     float offset_x = 5.;
     float offset_z = 5.;
@@ -208,6 +208,31 @@ void GRAPH_SYSTEM::createNet_Square( int n, int num_layers )
     // modify and add your code heres
     //
 
+    vector<vector<int>> node_ids(num_layers, vector<int>(n));
+    for (int j = 0; j < num_layers; j++) {
+        for (int i = 0; i < n; i++) {
+            float x_cood = offset_x + dx * i;
+            float z_cood = offset_z + dz * j;
+
+            node_ids[j][i] = addNode(x_cood, 0.0, z_cood, r);
+        }
+    }
+
+    for (int j = 0; j < num_layers; j++) {
+        for (int i = 0; i < n; i++) {
+            int cur_id = node_ids[j][i];
+
+            if (i < n - 1) {
+                int right_id = node_ids[j][i + 1];
+                addEdge(cur_id, right_id);
+            }
+
+            if (j < num_layers - 1) {
+                int bottom_id = node_ids[j + 1][i];
+                addEdge(cur_id, bottom_id);
+            }
+        }
+    }
 }
 void GRAPH_SYSTEM::createNet_RadicalCircular( int n ) {
 
