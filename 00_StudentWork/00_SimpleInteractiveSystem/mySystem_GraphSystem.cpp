@@ -177,6 +177,44 @@ void GRAPH_SYSTEM::createRandomGraph_DoubleCircles(int n)
     //
     // modify and add your code heres
     //
+
+    vector<int> inner_ids(n);
+    vector<int> outer_ids(n);
+
+    for (int i = 0; i < n; i++) {
+        float angle = 2 * 3.1415926 * i / n;
+        float x = offset_x + r * cos(angle);
+        float z = offset_z + r * sin(angle);
+
+        inner_ids[i] = addNode(x, 0.0, z, 1.0);
+    }
+
+    for (int i = 0; i < n; i++) {
+        float angle = 2 * 3.1415926 * i / n;
+        float x = offset_x + (r + d) * cos(angle);
+        float z = offset_z + (r + d) * sin(angle);
+
+        outer_ids[i] = addNode(x, 0.0, z, 1.0);
+    }
+
+    float safe_cos = r / (r + d);
+
+    for (int i = 0; i < n; i++) {
+        float angle_in = 2 * 3.1415926 * i / n;
+
+        while (true) {
+            int ran_out = rand() % n;
+            float angle_out = 2 * 3.1415926 * ran_out / n;
+
+            float angle_diff = angle_out - angle_in;
+
+            if (cos(angle_diff) >= safe_cos) {
+                addEdge(inner_ids[i], outer_ids[ran_out]);
+                break;
+            }
+        }
+    }
+
 }
 
 void GRAPH_SYSTEM::createNet_Circular( int n, int num_layers )
