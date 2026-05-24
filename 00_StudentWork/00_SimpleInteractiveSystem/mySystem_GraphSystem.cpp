@@ -282,7 +282,16 @@ void GRAPH_SYSTEM::createNet_RadicalCircular( int n ) {
     // modify and add your code heres
     //
 
-    
+    int center_id = addNode(offset_x, 0.0, offset_z, 1.0);
+
+    for (int i = 0; i < n; i++) {
+        float angle = 2 * 3.1415926 * i / n;
+        float x = offset_x + r * cos(angle);
+        float z = offset_z + r * sin(angle);
+
+        int cur_node = addNode(x, 0.0, z, 1.0);
+        addEdge(cur_node, center_id);
+    }
 }
 
 //
