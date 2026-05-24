@@ -185,7 +185,7 @@ void GRAPH_SYSTEM::createNet_Circular( int n, int num_layers )
 
     float dx = 5.0;
     float dz = 5.0;
-    float r = 5; // radius
+    float r = 1; // radius
     float d = 5; // layer distance 
     float offset_x = 90.;
     float offset_z = 30.;
@@ -193,6 +193,31 @@ void GRAPH_SYSTEM::createNet_Circular( int n, int num_layers )
     //
     // modify and add your code heres
     //
+
+    int total_circle = num_layers + 1;
+    vector<vector<int>> node_ids(total_circle, vector<int>(n));
+
+    for (int j = 0; j < total_circle; j++) {
+        float cur_radius = (j + 1) * d;
+
+        for (int i = 0; i < n; i++) {
+            float angle = 2 * 3.1415926 * i / n;
+            float x = offset_x + cur_radius * cos(angle);
+            float z = offset_z + cur_radius * sin(angle);
+
+            node_ids[j][i] = addNode(x, 0.0, z, r);
+        }
+    }
+
+    for (int j = 0; j < num_layers; j++) {
+        for (int i = 0; i < n; i++) {
+            int cur_id = node_ids[j][i];
+
+            int next_id = node_ids[j][(i + 1) % n];
+            addEdge(cur_id, next_id);
+            addEdge(cur_id, node_ids[j + 1][i]);
+        }
+    }
 }
 void GRAPH_SYSTEM::createNet_Square( int n, int num_layers )
 {
@@ -257,7 +282,7 @@ void GRAPH_SYSTEM::createNet_RadicalCircular( int n ) {
     // modify and add your code heres
     //
 
-
+    
 }
 
 //
