@@ -404,6 +404,24 @@ GRAPH_NODE *GRAPH_SYSTEM::findNearestNode( double x, double z, double &cur_dista
     //
     // modify and add your code heres
     //
+    double min_dist2 = 1e18;
+    for (int i = 0; i < mCurNumOfActiveNodes; i++) {
+        int nodeID = mActiveNodeArr[i];
+
+        GRAPH_NODE* cur_node = (GRAPH_NODE*)&mNodeArr_Pool[nodeID];
+
+        double dx = cur_node->p.x - x;
+        double dz = cur_node->p.z - z;
+        double dist2 = dx * dx + dz * dz;
+
+        if (dist2 < min_dist2) {
+            min_dist2 = dist2;
+            n = cur_node;
+        }
+
+    }
+
+    cur_distance2 = min_dist2;
     return n;
 }
 
@@ -467,41 +485,64 @@ void GRAPH_SYSTEM::performOperation(GRAPH_NODE* node) {
     }
 }
 
-void GRAPH_SYSTEM::deleteEdge( int edgeID )
+void GRAPH_SYSTEM::deleteEdge(int edgeID)
 {
-    //GRAPH_EDGE *e = &mEdgeArr_Pool[ edgeID ];
-    //int dynamicID = e->dynamicID;
+    GRAPH_EDGE* e = &mEdgeArr_Pool[edgeID];
+    int dynamicID = e->dynamicID;
 
     //
     // modify and add your code heres
     //
 
+    removeEdgeFromNode(e, e->nodeID[0]);
+    removeEdgeFromNode(e, e->nodeID[1]);
+
+    int lastEdgeID = mActiveEdgeArr[mCurNumOfActiveEdges - 1];
+    mActiveEdgeArr[dynamicID] = lastEdgeID;
+    mEdgeArr_Pool[lastEdgeID].dynamicID = dynamicID;
+    mCurNumOfActiveEdges--;
 }
 
 void GRAPH_SYSTEM::removeEdgeFromNode( const GRAPH_EDGE *e, int nodeID )
 {
-    //GRAPH_NODE *n = &mNodeArr_Pool[ nodeID ];
+    GRAPH_NODE *n = &mNodeArr_Pool[ nodeID ];
     //
     // modify and add your code heres
     //
 
+    for (int i = 0; i < n->edgeID.size(); i++) {
+        if (n->edgeID[i] == e->id) {
+            n->edgeID.erase(n->edgeID.begin() + i);
+            break;
+        }
+    }
 }
 void GRAPH_SYSTEM::deleteEdgesOfNode( int nodeID )
 {
-   // GRAPH_NODE *n  = &mNodeArr_Pool[ nodeID ];
+    GRAPH_NODE *n  = &mNodeArr_Pool[ nodeID ];
     //
     // modify and add your code heres
     //
 
+    vector<int> edge = n->edgeID;
+    for (int i = 0; i < edge.size(); i++) {
+        deleteEdge(edge[i]);
+    }
 }
 
 void GRAPH_SYSTEM::deleteNode( int nodeID ) {
-    //if ( mCurNumOfActiveNodes <= 0 ) return;
-    //GRAPH_NODE *n = &mNodeArr_Pool[ nodeID ];
+    if ( mCurNumOfActiveNodes <= 0 ) return;
+    GRAPH_NODE *n = &mNodeArr_Pool[ nodeID ];
     //
     // modify and add your code heres
     //
 
+    deleteEdgesOfNode(nodeID);
+    int dynamicID = n->dynamicID;
+    int lastNodeID = mActiveNodeArr[mCurNumOfActiveNodes - 1];
+    mActiveNodeArr[dynamicID] = lastNodeID;
+    mNodeArr_Pool[lastNodeID].dynamicID = dynamicID;
+    mCurNumOfActiveNodes--;
 }
 
 void GRAPH_SYSTEM::deleteSelectedNode(  ) {
@@ -509,6 +550,10 @@ void GRAPH_SYSTEM::deleteSelectedNode(  ) {
     //
     // modify and add your code heres
     //
+
+    deleteNode(mSelectedNode->id);
+
+    mSelectedNode = 0;
 }
 
 bool GRAPH_SYSTEM::isSelectedNode( ) const
