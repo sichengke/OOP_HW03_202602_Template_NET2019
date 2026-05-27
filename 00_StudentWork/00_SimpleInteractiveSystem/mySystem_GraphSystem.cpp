@@ -887,7 +887,8 @@ void GRAPH_SYSTEM::update( )
     // delete the selected node?
     // delete all the edges incident to the selected node?
     //
-
+    int target_node_id = mActiveNodeArr[0];
+    deleteNode(target_node_id);
     mSelectedNode = 0;
     mPassiveSelectedNode = 0;
 }
