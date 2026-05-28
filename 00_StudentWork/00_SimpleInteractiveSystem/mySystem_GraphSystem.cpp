@@ -336,18 +336,23 @@ void GRAPH_SYSTEM::createNet_RadicalCircular( int n ) {
 // return the node id
 // return -1: no free node
 //
-int GRAPH_SYSTEM::addNode( float x, float y, float z, float r )
+int GRAPH_SYSTEM::addNode(float x, float y, float z, float r)
 {
-    GRAPH_NODE *g;
-    g = getFreeNode( );
+    GRAPH_NODE* g;
+    g = getFreeNode();
     //
     // modify and add your code heres
     //
 
     if (g == nullptr) return -1;
 
+    g->id = g - mNodeArr_Pool;
+
     g->p = vector3(x, y, z);
     g->r = r;
+    g->dynamicID = mCurNumOfActiveNodes;
+    mActiveNodeArr[mCurNumOfActiveNodes] = g->id;
+    mCurNumOfActiveNodes++;
     return g->id;
 }
 
@@ -355,15 +360,17 @@ int GRAPH_SYSTEM::addNode( float x, float y, float z, float r )
 // return the edge id
 // return -1: no free edge
 //
-int GRAPH_SYSTEM::addEdge( int nodeID_0, int nodeID_1 )
-{
-    GRAPH_EDGE *e;
-    e = getFreeEdge( );
+int GRAPH_SYSTEM::addEdge(int nodeID_0, int nodeID_1){
+
+    GRAPH_EDGE* e;
+    e = getFreeEdge();
     //
     // modify and add your code heres
     //
 
     if (e == nullptr) return -1;
+
+    e->id = e - mEdgeArr_Pool;
 
     e->nodeID[0] = nodeID_0;
     e->nodeID[1] = nodeID_1;
@@ -371,6 +378,10 @@ int GRAPH_SYSTEM::addEdge( int nodeID_0, int nodeID_1 )
     mNodeArr_Pool[nodeID_0].edgeID.push_back(e->id);
     mNodeArr_Pool[nodeID_1].edgeID.push_back(e->id);
 
+    int dynamicID = mCurNumOfActiveEdges;
+    e->dynamicID = dynamicID;
+    mActiveEdgeArr[dynamicID] = e->id;
+    mCurNumOfActiveEdges++;
     return e->id;
 }
 
