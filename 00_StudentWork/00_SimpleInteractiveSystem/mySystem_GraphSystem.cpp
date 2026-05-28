@@ -608,14 +608,16 @@ void GRAPH_SYSTEM::resetDepthOfAllNodes()
 
     int numNodes = getNumOfNodes();
     for (int i = 0; i < numNodes; ++i) {
-        //int nodeID = mActiveNodeArr[i];
-        //GRAPH_NODE* n = &mNodeArr_Pool[nodeID];
+        int nodeID = mActiveNodeArr[i];
+        GRAPH_NODE* n = &mNodeArr_Pool[nodeID];
         //
         // modify and add your code heres
         // 
         // set node's depth
         // and others if necessary
         //
+        n->depth = 999999.0f;
+        n->visited = false;
     }
 }
 
@@ -655,18 +657,28 @@ void GRAPH_SYSTEM::computeDepthOfAllNodesFromSelectedNode(GRAPH_NODE* node, int 
         // update the current node's depth
         // recursively update all the nodes connected to the current node
         //     
-    //for (int i = 0; i < node->edgeID.size(); ++i) {
+    for (int i = 0; i < node->edgeID.size(); ++i) {
         //
         // modify and add your code heres
         // 
         
-    //}
+        int edgeID = node->edgeID[i];
+        GRAPH_EDGE* e = &mEdgeArr_Pool[edgeID];
+        GRAPH_NODE* n0 = &mNodeArr_Pool[e->nodeID[0]];
+        GRAPH_NODE* n1 = &mNodeArr_Pool[e->nodeID[1]];
+
+        GRAPH_NODE* nextNode = (n0 == node) ? n1 : n0;
+
+        if (nextNode->depth > depth + 1) {
+            computeDepthOfAllNodesFromSelectedNode(nextNode, depth + 1);
+        }
+    }
 }
 
 void GRAPH_SYSTEM::computeDepthOfAllNodesFromSelectedNode()
 {
     // reset the depth of all nodes
-    // if mSelectedNode is nullpute, return
+    //if mSelectedNode is nullpute, return
     // set  mMaxNodeDepth = 0;
     // set mSelectedNode->depth as zero
     // invoke computeDepthOfAllNodesFromSelectedNode
@@ -677,6 +689,9 @@ void GRAPH_SYSTEM::computeDepthOfAllNodesFromSelectedNode()
     // modify and add your code heres
     //
 
+    if (mSelectedNode == nullptr) return;
+    resetDepthOfAllNodes();
+    computeDepthOfAllNodesFromSelectedNode(mSelectedNode, 0);
 
     // Determine the mMaxNodeDepth
     int numNodes = getNumOfNodes();
@@ -684,6 +699,12 @@ void GRAPH_SYSTEM::computeDepthOfAllNodesFromSelectedNode()
         //
         // modify and add your code heres
         //
+        int nodeID = mActiveNodeArr[i];
+        GRAPH_NODE* n = &mNodeArr_Pool[nodeID];
+
+        if (n->depth > mMaxNodeDepth && n->depth < 999999.0f) {
+            mMaxNodeDepth = n->depth;
+        }
     }
 }
 
