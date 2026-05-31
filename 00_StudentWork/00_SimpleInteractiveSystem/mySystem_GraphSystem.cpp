@@ -172,8 +172,8 @@ void GRAPH_SYSTEM::createRandomGraph_DoubleCircles(int n)
     float dz = 5.0;
     float r = 15; // radius
     float d = 10; // layer distance
-    float offset_x = 90.;
-    float offset_z = 15.;
+    float offset_x = 150.0;
+    float offset_z = 100.0;
     //
     // modify and add your code heres
     //
@@ -225,8 +225,8 @@ void GRAPH_SYSTEM::createNet_Circular( int n, int num_layers )
     float dz = 5.0;
     float r = 1; // radius
     float d = 5; // layer distance 
-    float offset_x = 90.;
-    float offset_z = 30.;
+    float offset_x = 150.0;
+    float offset_z = 100.0;
 
     //
     // modify and add your code heres
@@ -265,8 +265,8 @@ void GRAPH_SYSTEM::createNet_Square( int n, int num_layers )
     float dz = 5.0;
     float r = 1; // radius
     float d = 5; // layer distance 
-    float offset_x = 5.;
-    float offset_z = 5.;
+    float offset_x = 150.0;
+    float offset_z = 100.0;
     //
     // modify and add your code heres
     //
@@ -311,8 +311,8 @@ void GRAPH_SYSTEM::createNet_RadicalCircular( int n ) {
 
     reset( );
 
-    float offset_x = 90.0;
-    float offset_z = 15.0;
+    float offset_x = 150.0;
+    float offset_z = 100.0;
 
     float r = 15; // radius
 
@@ -821,7 +821,7 @@ void GRAPH_SYSTEM::handleKeyPressedEvent( unsigned char key )
         break;
     case '3':
         mFlgAutoNodeDeletion = false;
-        createNet_Square(15, 4);
+        createNet_Square(15, 6);
         mSelectedNode = 0;
 
         break;
