@@ -350,9 +350,7 @@ int GRAPH_SYSTEM::addNode(float x, float y, float z, float r)
 
     g->p = vector3(x, y, z);
     g->r = r;
-    g->dynamicID = mCurNumOfActiveNodes;
-    mActiveNodeArr[mCurNumOfActiveNodes] = g->id;
-    mCurNumOfActiveNodes++;
+
     return g->id;
 }
 
@@ -378,10 +376,6 @@ int GRAPH_SYSTEM::addEdge(int nodeID_0, int nodeID_1){
     mNodeArr_Pool[nodeID_0].edgeID.push_back(e->id);
     mNodeArr_Pool[nodeID_1].edgeID.push_back(e->id);
 
-    int dynamicID = mCurNumOfActiveEdges;
-    e->dynamicID = dynamicID;
-    mActiveEdgeArr[dynamicID] = e->id;
-    mCurNumOfActiveEdges++;
     return e->id;
 }
 
@@ -515,6 +509,9 @@ void GRAPH_SYSTEM::deleteEdge(int edgeID)
     mActiveEdgeArr[dynamicID] = lastEdgeID;
     mEdgeArr_Pool[lastEdgeID].dynamicID = dynamicID;
     mCurNumOfActiveEdges--;
+
+    mFreeEdgeArr[mCurNumOfFreeEdges] = edgeID;
+    mCurNumOfFreeEdges++;
 }
 
 void GRAPH_SYSTEM::removeEdgeFromNode( const GRAPH_EDGE *e, int nodeID )
@@ -557,6 +554,9 @@ void GRAPH_SYSTEM::deleteNode( int nodeID ) {
     mActiveNodeArr[dynamicID] = lastNodeID;
     mNodeArr_Pool[lastNodeID].dynamicID = dynamicID;
     mCurNumOfActiveNodes--;
+
+    mFreeNodeArr[mCurNumOfFreeNodes] = nodeID;
+    mCurNumOfFreeNodes++;
 }
 
 void GRAPH_SYSTEM::deleteSelectedNode(  ) {
