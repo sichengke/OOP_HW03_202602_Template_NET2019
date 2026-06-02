@@ -95,6 +95,7 @@ void GRAPH_SYSTEM::reset( )
 
     for ( int i = 0; i < mCurNumOfFreeNodes; ++i ) {
         mFreeNodeArr[ i ] = i;
+        mNodeArr_Pool[i].edgeID.clear();
     }
     for ( int i = 0; i < mCurNumOfFreeEdges; ++i ) {
         mFreeEdgeArr[ i ] = i;
@@ -351,6 +352,8 @@ int GRAPH_SYSTEM::addNode(float x, float y, float z, float r)
     g->p = vector3(x, y, z);
     g->r = r;
 
+    g->edgeID.clear();
+
     return g->id;
 }
 
@@ -557,6 +560,9 @@ void GRAPH_SYSTEM::deleteNode( int nodeID ) {
 
     mFreeNodeArr[mCurNumOfFreeNodes] = nodeID;
     mCurNumOfFreeNodes++;
+
+    if (mStartNode != nullptr && mStartNode->id == nodeID) mStartNode = nullptr;
+    if (mDestinationNode != nullptr && mDestinationNode->id == nodeID) mDestinationNode = nullptr;
 }
 
 void GRAPH_SYSTEM::deleteSelectedNode(  ) {
